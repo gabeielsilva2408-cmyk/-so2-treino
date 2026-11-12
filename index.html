@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101014">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SO2 Treino">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>SO2 Treino</title>
+<style>
+:root{color-scheme:dark;--bg:#101014;--panel:#1b1b22;--line:#303039;--red:#e3263e;--muted:#aaaab5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#3b1019,transparent 38%),var(--bg);color:#fff;font:16px -apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+main{max-width:520px;margin:0 auto;padding:22px 0 34px}.head{display:flex;align-items:center;gap:12px;margin-bottom:20px}.logo{width:46px;height:46px;border-radius:14px;background:var(--red);display:grid;place-items:center;font-size:25px;font-weight:900}.sub{color:#f06b7c;font-size:11px;font-weight:800;letter-spacing:1.5px;margin-top:4px}.pill{margin-left:auto;border:1px solid #376b4b;color:#8de0a7;padding:6px 9px;border-radius:30px;font-size:10px}
+.card{background:linear-gradient(145deg,#202027,#17171d);border:1px solid var(--line);border-radius:18px;padding:17px;margin:13px 0}.label{font-size:12px;color:var(--muted);letter-spacing:1px;font-weight:800;margin:2px 0 13px}.setting{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #2b2b33}.setting:last-child{border:0}.desc{font-size:12px;color:var(--muted);margin-top:4px}.switch{appearance:none;width:48px;height:28px;background:#444;border-radius:30px;position:relative;transition:.2s;flex:none}.switch:before{content:"";position:absolute;width:22px;height:22px;top:3px;left:3px;border-radius:50%;background:white;transition:.2s}.switch:checked{background:var(--red)}.switch:checked:before{transform:translateX(20px)}input[type=range]{width:100%;accent-color:var(--red);margin:15px 0}.rangehead{display:flex;justify-content:space-between}.btn{width:100%;border:0;border-radius:13px;padding:14px;background:var(--red);color:white;font-weight:800;font-size:14px;margin-top:8px}.btn.secondary{background:#303039}.note{font-size:11px;line-height:1.5;color:#92929c;text-align:center;margin:18px 8px}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#292930;padding:10px 15px;border-radius:12px;opacity:0;transition:.2s;font-size:13px;pointer-events:none}.toast.show{opacity:1}
+</style>
+</head>
+<body><main>
+<header class="head"><div class="logo">⌖</div><div><strong>STANDOFF 2</strong><div class="sub">PAINEL AUXILIAR • IPHONE</div></div><span class="pill">TREINO</span></header>
+<section class="card"><div class="label">CONFIGURAÇÕES DE TREINO</div>
+<div class="setting"><div><strong>Treino de mira</strong><div class="desc">Prática de precisão</div></div><input aria-label="Treino de mira" class="switch" type="checkbox" checked></div>
+<div class="setting"><div><strong>Controle de recoil</strong><div class="desc">Exercícios de controle</div></div><input aria-label="Controle de recoil" class="switch" type="checkbox"></div>
+<div class="setting"><div><strong>Mira personalizada</strong><div class="desc">Preferência visual de treino</div></div><input aria-label="Mira personalizada" class="switch" type="checkbox" checked></div>
+<div class="setting"><div><strong>Treino de reflexo</strong><div class="desc">Prática de velocidade</div></div><input aria-label="Treino de reflexo" class="switch" type="checkbox"></div>
+<div class="setting"><div><strong>Interface gamer</strong><div class="desc">Tema escuro</div></div><input aria-label="Interface gamer" class="switch" type="checkbox" checked></div></section>
+<section class="card"><div class="label">SENSIBILIDADE DE TREINO</div><div class="rangehead"><span class="desc">Sensibilidade</span><strong id="val">65%</strong></div><input id="range" type="range" min="1" max="100" value="65"><button class="btn" id="save">SALVAR CONFIGURAÇÕES</button><button class="btn secondary" id="reset">REDEFINIR</button></section>
+<p class="note">Aplicativo auxiliar demonstrativo. As opções organizam suas preferências de treino e não alteram o Standoff 2, não ativam cheats e não ficam sobrepostas ao jogo. O iOS não permite que um app comum crie uma janela interativa sobre outro app.</p>
+</main><div class="toast" id="toast" role="status">Configurações salvas neste dispositivo</div>
+<script>
+const range=document.getElementById('range'),val=document.getElementById('val'),toast=document.getElementById('toast');
+range.addEventListener('input',()=>val.textContent=range.value+'%');
+document.getElementById('save').onclick=()=>{localStorage.setItem('so2sens',range.value);localStorage.setItem('so2switches',JSON.stringify([...document.querySelectorAll('.switch')].map(x=>x.checked)));toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)};
+document.getElementById('reset').onclick=()=>{range.value=65;val.textContent='65%';document.querySelectorAll('.switch').forEach((x,i)=>x.checked=[true,false,true,false,true][i]);localStorage.removeItem('so2sens');localStorage.removeItem('so2switches')};
+try{const s=localStorage.getItem('so2sens');if(s){range.value=s;val.textContent=s+'%'}const c=JSON.parse(localStorage.getItem('so2switches')||'null');if(c)document.querySelectorAll('.switch').forEach((x,i)=>x.checked=!!c[i])}catch(e){}
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
